@@ -42,9 +42,30 @@ class Birthday(Field):
 
     def __str__(self):
         return self.value.strftime("%d.%m.%Y")
+    
+class Email(Field):
+    pass
 
 
 class Record:
     """"Клас для зберігання інформації про 
     контакт"""
-    pass
+    def __init__(self, name=None) -> None:
+        self.name = Name(name) if name else None
+        self.phones = []
+        self.email = None
+        self.birthday = None
+
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'phones':[phone.value for phone in self.phones], #if self.phones else []
+            "email": self.email,
+            'birthday': self.birthday
+        }
+    
+    def from_dict(self, data: dict):
+        self.name = Name(data.get("name"))
+        self.phones = [Phone(phone) for phone in data.get("phones")]
+        self.email = Email(data.get("email")) 
+        self.birthday = Birthday(data.get("birthday"))   
