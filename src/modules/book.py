@@ -30,8 +30,26 @@ class ContactBook(UserDict):
     def save(self):
         with open(self.filename, 'w') as file:
             json.dump(self.data, file, indent=4)
+    
+    def list_contacts(self):
+        return self.data
+    
+    def display_contact_info(self, name):
+        contact = self.find(name)
+        if contact:
+            return f"Name: {name}, Value: {contact}"
+        else:
+            return "Contact not found."
+    def sort_contacts(self, by='name'):
+        if by == 'name':
+            return dict(sorted(self.data.items()))
+        elif by == 'value':
+            return dict(sorted(self.data.items(), key=lambda item: item[1]))
+        else:
+            return "Invalid sort criteria."    
 
 class Record:
     def __init__(self, name, value):
         self.name = name
         self.value = value
+
