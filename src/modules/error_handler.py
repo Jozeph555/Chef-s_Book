@@ -1,1 +1,1 @@
-"""Module for handling errors"""
+# TODO: implement
