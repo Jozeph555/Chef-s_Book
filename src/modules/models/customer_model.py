@@ -53,7 +53,7 @@ class Customer:
 
     @property
     def address(self) -> Optional[str]:
-        return self._address.value if self._address else None
+        return str(self._address)
 
     @address.setter
     def address(self, address: str) -> None:
@@ -61,7 +61,7 @@ class Customer:
 
     @property
     def email(self) -> Optional[str]:
-        return self._email.value if self._email else None
+        return str(self._email)
 
     @email.setter
     def email(self, email: str) -> None:
@@ -88,12 +88,12 @@ class Customer:
 
     def dto(self) -> CustomerDTO:
         return CustomerDTO(
-            id=str(self.id),
-            name=str(self.name),
+            id=str(self._id) if self._id.value else None,
+            name=self._name.value,
             phones=[str(phone) for phone in self._phones],
-            birthday=str(self.birthday),
-            address=str(self.address),
-            email=str(self.email),
+            birthday=str(self._birthday) if self._birthday.value else None,
+            address=self._address.value,
+            email=self._email.value,
         )
 
     def __str__(self) -> str:

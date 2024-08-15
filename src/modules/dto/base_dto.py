@@ -1,8 +1,10 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
 class BaseDTO(BaseModel):
-    id: str = None
+    id: Optional[str] = None
 
     @classmethod
     def from_dict(cls, data: dict) -> 'BaseDTO':
@@ -16,3 +18,6 @@ class BaseDTO(BaseModel):
     @classmethod
     def get_fields(cls):
         return list(cls.__annotations__.keys())
+
+    def empty_string_to_none(value):
+        return value if value != '' else None

@@ -6,7 +6,7 @@ D = TypeVar('D')
 
 class Storage(Generic[D]):
     def __init__(self, dto_cls: Type[D], filename: str):
-        self.dto_type = dto_cls
+        self.dto_cls = dto_cls
         self.filename = filename
 
     def save(self, dtos: List[D]) -> None:
@@ -28,7 +28,7 @@ class Storage(Generic[D]):
                 reader = csv.DictReader(file, fieldnames=self._get_fieldnames())
                 next(reader, None)
                 for row in reader:
-                    dto = self.dto_type()
+                    dto = self.dto_cls()
                     dtos.append(dto.from_dict(row))
         except FileNotFoundError:
             return dtos
@@ -44,5 +44,5 @@ class Storage(Generic[D]):
 
     def _get_fieldnames(self) -> List[str]:
         """Get the fieldnames for the CSV. This assumes all DTOs have the same fields."""
-        dummy_dto = self.dto_type()
+        dummy_dto = self.dto_cls()
         return dummy_dto.get_fields()

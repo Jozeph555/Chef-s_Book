@@ -24,6 +24,10 @@ class Booking:
     def customer_id(self) -> Optional[str]:
         return str(self._customer_id) if self._customer_id else None
 
+    @customer_id.setter
+    def customer_id(self, new_customer_id: str) -> None:
+        self._customer_id = IDField(new_customer_id)
+
     @property
     def date(self) -> Optional[str]:
         return str(self._date) if self._date.value else None
@@ -34,9 +38,9 @@ class Booking:
 
     def dto(self) -> BookingDTO:
         return BookingDTO(
-            id=str(self.id),
-            customer_id=str(self.customer_id),
-            date=str(self.date),
+            id=str(self._id.value),
+            customer_id=str(self._customer_id.value),
+            date=str(self._date) if self._date.value else None
         )
 
     def __str__(self) -> str:

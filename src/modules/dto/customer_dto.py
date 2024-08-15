@@ -4,28 +4,31 @@ from src.modules.dto.base_dto import BaseDTO
 
 
 class CustomerDTO(BaseDTO):
+    id: Optional[str] = None
     name: Optional[str] = None
-    phones: List[str] = []
     birthday: Optional[str] = None
     address: Optional[str] = None
     email: Optional[str] = None
+    phones: List[str] = []
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     @classmethod
     def from_dict(cls, data: dict) -> 'CustomerDTO':
+        def empty_string_to_none(value):
+            return value if value != '' else None
+
         return cls(
-            id=data.get('id', None),
-            name=data.get('name', None),
-            phones=data.get('phones').split(';') if data.get('phones') else None,
-            birthday=data.get('birthday', None),
-            address=data.get('address', None),
-            email=data.get('email', None)
+            id=empty_string_to_none(data.get('id')),
+            name=empty_string_to_none(data.get('name')),
+            phones=[phone for phone in data.get('phones', '').split(';') if phone] if data.get('phones') else [],
+            birthday=empty_string_to_none(data.get('birthday')),
+            address=empty_string_to_none(data.get('address')),
+            email=empty_string_to_none(data.get('email'))
         )
 
     def to_dict(self) -> dict:
-        print('EMAIL', self.email or '')
         return {
             'id': self.id,
             'name': self.name or '',
@@ -34,10 +37,3 @@ class CustomerDTO(BaseDTO):
             'address': self.address or '',
             'email': self.email or ''
         }
-
-    @classmethod
-    def get_fields(cls):
-        fields = set(cls.__annotations__.keys())
-        for base in cls.__bases__:
-            fields.update(base.__annotations__.keys())
-        return list(fields)
