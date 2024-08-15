@@ -1,3 +1,6 @@
+""""Модуль для зберігання контактів та нотаток у файл"""
+
+
 import csv
 from typing import List, Type, TypeVar, Generic
 

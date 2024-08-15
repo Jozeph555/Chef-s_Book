@@ -1,7 +1,16 @@
-"""Module for working with Notes"""
+"""Модуль для роботи з Нотатками"""
+
+
+from datetime import datetime
 
 
 class Notes:
-    """Class for storing and managing Notes"""
-    # TODO: implement
-    pass
+    """Клас для зберігання Нотаток"""
+    def __init__(self, title, content):
+        self.title = title
+        self.content = content
+        self.created_at = datetime.now()
+
+    def __str__(self):
+        return f"{self.title}: {self.content}"
+
