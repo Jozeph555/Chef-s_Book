@@ -50,3 +50,8 @@ class CustomerService(BaseService[CustomerDTO, Customer]):
 
     def find_by_birthday(self, birthday: str) -> List[Customer]:
         return [customer for customer in self if customer.birthday.value == birthday]
+
+    def find_by_note(self, note: str) -> List[Customer]:
+        return [customer for customer in self if customer.has_note(note)]
+
+
