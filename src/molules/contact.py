@@ -2,6 +2,7 @@
 
 
 from datetime import datetime
+from notes import Notes
 
 
 class Field:
@@ -77,6 +78,6 @@ class Record:
 
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday)
-
+    
     def add_note(self, title, content):
         self.notes.append(Notes(title, content))
