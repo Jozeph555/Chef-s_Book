@@ -13,3 +13,4 @@ class Notes:
 
     def __str__(self):
         return f"{self.title}: {self.content}"
+
