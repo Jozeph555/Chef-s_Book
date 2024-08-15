@@ -43,16 +43,19 @@ class Birthday(Field):
 
     def __str__(self):
         return self.value.strftime("%d.%m.%Y")
+    
+class Email(Field):
+    pass
 
 
 class Record:
     """"Клас для зберігання інформації про 
     контакт"""
-    def __init__(self, name):
-        self.name = Name(name)
+    def __init__(self, name=None) -> None:
+        self.name = Name(name) if name else None
         self.phones = []
+        self.email = None
         self.birthday = None
-        self.notes = []
 
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
