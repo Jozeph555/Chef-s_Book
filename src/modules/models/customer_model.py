@@ -7,6 +7,7 @@ from src.modules.models.fields.email_field import EmailField
 from src.modules.models.fields.id_field import IDField
 from src.modules.models.fields.name_field import NameField
 from src.modules.models.fields.phone_field import PhoneField
+from src.modules.models.fields.note_field import NoteField
 
 
 class Customer:
@@ -22,6 +23,7 @@ class Customer:
         self._address = AddressField(dto.address, validate=False)
         self._email = EmailField(dto.email, validate=False)
         self._phones = [PhoneField(phone, validate=False) for phone in dto.phones]
+        self._notes = [NoteField(note, validate=False) for note in dto.notes]
 
     @property
     def id(self) -> str:
@@ -67,6 +69,14 @@ class Customer:
     def email(self, email: str) -> None:
         self._email = EmailField(email)
 
+    @property
+    def notes(self) -> List[str]:
+        return [note.value for note in self._notes]
+
+    @notes.setter
+    def notes(self, notes: List[str]) -> None:
+        self._notes = [NoteField(note) for note in notes]
+
     def add_phone(self, phone_number: str) -> None:
         self._phones.append(PhoneField(phone_number))
 
@@ -86,6 +96,24 @@ class Customer:
                 return True
         return False
 
+    def add_note(self, note: str) -> None:
+        self._notes.append(NoteField(note))
+
+    def edit_note(self, index_to_change: int, new_note: str) -> None:
+        for i in range(len(self._notes)):
+            if i == index_to_change:
+                self._notes[i] = NoteField(new_note)
+                return
+
+    def remove_note(self, index_to_remove: int) -> None:
+        del self._notes[index_to_remove - 1]
+
+    def has_note(self, note_to_search: str) -> bool:
+        for note in self._notes:
+            if note_to_search in note.value:
+                return True
+        return False
+
     def dto(self) -> CustomerDTO:
         return CustomerDTO(
             id=str(self._id) if self._id.value else None,
@@ -94,7 +122,9 @@ class Customer:
             birthday=str(self._birthday) if self._birthday.value else None,
             address=self._address.value,
             email=self._email.value,
+            notes=[str(note) for note in self._notes],
         )
 
     def __str__(self) -> str:
-        return f"Customer name: {self.name}, phones: {'; '.join(self.phones)}"
+        return (f"Customer name: {self.name}, phones: {'; '.join(self.phones)}\n"
+                f"{'\n'.join([f"{i+1} - {note};" for i, note in enumerate(self.notes)])}")
