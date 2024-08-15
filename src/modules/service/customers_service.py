@@ -38,3 +38,15 @@ class CustomerService(BaseService[CustomerDTO, Customer]):
             upcoming_birthdays.append(record)
 
         return upcoming_birthdays
+
+    def find_by_name(self, name: str) -> List[Customer]:
+        return [customer for customer in self if customer.name.value == name]
+
+    def find_by_phone(self, phone: str) -> List[Customer]:
+        return [customer for customer in self if customer.has_phone(phone)]
+
+    def find_by_email(self, email: str) -> List[Customer]:
+        return [customer for customer in self if customer.email.value == email]
+
+    def find_by_birthday(self, birthday: str) -> List[Customer]:
+        return [customer for customer in self if customer.birthday.value == birthday]
