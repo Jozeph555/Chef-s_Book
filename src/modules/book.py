@@ -1,6 +1,7 @@
 import json
 import os
 from collections import UserDict
+from contact import Record
 
 class ContactBook(UserDict):
     def __init__(self, filename='contacts.json'):
@@ -40,6 +41,7 @@ class ContactBook(UserDict):
             return f"Name: {name}, Value: {contact}"
         else:
             return "Contact not found."
+    
     def sort_contacts(self, by='name'):
         if by == 'name':
             return dict(sorted(self.data.items()))
@@ -47,9 +49,3 @@ class ContactBook(UserDict):
             return dict(sorted(self.data.items(), key=lambda item: item[1]))
         else:
             return "Invalid sort criteria."    
-
-class Record:
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
-
