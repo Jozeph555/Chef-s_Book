@@ -8,7 +8,7 @@ from .contact import (
     Name,
     Phone,
     Birthday,
-    Record
+    ContactRecord
 )
 
 # from .ui import
