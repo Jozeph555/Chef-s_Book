@@ -2,6 +2,7 @@
 
 
 from datetime import datetime
+from notes import Notes
 
 
 class Field:
@@ -47,4 +48,11 @@ class Birthday(Field):
 class Record:
     """"Клас для зберігання інформації про 
     контакт"""
-    pass
+    def __init__(self, name):
+        # name
+        # phones
+        # birthday
+        self.notes = []
+    
+    def add_note(self, title, content):
+        self.notes.append(Notes(title, content))
