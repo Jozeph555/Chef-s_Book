@@ -1,7 +1,6 @@
-"""Модуль для роботи з Нотатками"""
+"""Module for working with Notes"""
 
 
 class Notes:
-    """Клас для зберігання та управління 
-    Нотатками"""
+    """Class for storing and managing Notes"""
     pass

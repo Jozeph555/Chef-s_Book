@@ -1,1 +1,1 @@
-"""Модуль для обробки помилок"""
+"""Module for handling errors"""

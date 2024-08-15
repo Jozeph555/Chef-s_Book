@@ -1,1 +1,1 @@
-""""Модуль для зберігання контактів та нотаток у файл"""
+"""Module for storing contacts and notes to a file"""

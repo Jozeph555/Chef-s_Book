@@ -1,7 +1,6 @@
-"""Модуль для роботи з Книгою контактів"""
+"""Module for working with the Contact Book"""
 
 
 class ContactBook:
-    """Клас для зберігання та управління 
-    контактами у Книзі контактів"""
+    """Class for storing and managing contacts in the Contact Book"""
     pass

@@ -1,1 +1,1 @@
-"""Модуль для взаємодії з інтерфейсом користувача"""
+"""Module for interacting with the user interface"""

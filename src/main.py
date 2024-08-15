@@ -1,11 +1,11 @@
-"""Файл з точкою входу"""
+"""File with the entry point"""
 
 
 # from modules import
 
 
 def main():
-    """Основна функція"""
+    """Main function"""
     pass
 
 
