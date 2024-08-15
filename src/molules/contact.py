@@ -51,6 +51,7 @@ class Record:
         self.name = Name(name)
         self.phones = []
         self.birthday = None
+        self.notes = []
 
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
@@ -76,3 +77,6 @@ class Record:
 
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday)
+
+    def add_note(self, title, content):
+        self.notes.append(Notes(title, content))
