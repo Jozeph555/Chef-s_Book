@@ -1,7 +1,8 @@
-"""Модуль для роботи з Контактами"""
+"""Module for working with Contacts"""
 
 
-from datetime import datetime
+import re
+from datetime import datetime, date
 from notes import Notes
 
 
@@ -23,6 +24,22 @@ class Name(Field):
             super().__init__(value)
 
 
+class Email(Field):
+    """Клас для зберігання email контакту"""
+    def __init__(self, value):
+        if not self.is_valid_email(value):
+            raise ValueError(f"Email '{value}' не є дійсним.")
+        super().__init__(value)
+
+    @staticmethod
+    def is_valid_email(email):
+        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        return re.match(pattern, email) is not None
+
+    def __str__(self):
+        return f"Email: {self.value}"
+
+
 class Phone(Field):
     """Клас для зберігання номеру телефону контакту"""
     def __init__(self, value):
@@ -33,19 +50,31 @@ class Phone(Field):
 
 
 class Birthday(Field):
-    """Клас для зберігання дня народження контакту"""
+    """
+    A class for storing user's birthday
+    """
     def __init__(self, value):
+        super().__init__(value)
         try:
-            parsed_date = datetime.strptime(value, "%d.%m.%Y").date()
-        except ValueError:
-            raise ValueError("Неправильний формат дати. Використовуйте ДД.ММ.РРРР")
-        super().__init__(parsed_date)
+            birthday = datetime.strptime(value, "%d.%m.%Y").date()
+            self.validate_date(birthday)
+            self.value = birthday
+        except ValueError as e:
+            raise ValueError("Invalid date format. Use DD.MM.YYYY") from e
+
+
+    def validate_date(self, birthday):
+        """
+        Checks if the date is not in the future and not earlier than 1900.
+        """
+        today = date.today()
+        if birthday > today:
+            raise ValueError("Birthday cannot be in the future")
+        if birthday.year < 1900:
+            raise ValueError("Birthday year must be 1900 or later")
 
     def __str__(self):
         return self.value.strftime("%d.%m.%Y")
-    
-class Email(Field):
-    pass
 
 
 class Record:
@@ -81,6 +110,6 @@ class Record:
 
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday)
-    
+
     def add_note(self, title, content):
         self.notes.append(Notes(title, content))

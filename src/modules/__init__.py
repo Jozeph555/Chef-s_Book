@@ -7,6 +7,7 @@ from .contact import (
     Field,
     Name,
     Phone,
+    Email,
     Birthday,
     Record
 )
