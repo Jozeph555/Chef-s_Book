@@ -1,3 +1,3 @@
 # TODO: implement
-"""Модуль для взаємодії з інтерфейсом користувача"""
+"""Module for interaction with the user interface"""
 

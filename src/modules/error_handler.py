@@ -1,3 +1,3 @@
 # TODO: implement
-"""Модуль для обробки помилок"""
+"""Еrror handling module"""
 

@@ -1,4 +1,4 @@
-""""Модуль для зберігання контактів та нотаток у файл"""
+""""Module for storing contacts and notes in a file"""
 
 
 import csv
