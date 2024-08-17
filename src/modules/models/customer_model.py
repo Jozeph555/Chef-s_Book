@@ -70,12 +70,12 @@ class Customer:
         self._email = EmailField(email)
 
     @property
-    def notes(self) -> List[str]:
-        return [note.value for note in self._notes]
+    def notes(self) -> List[Tuple[str, List[str]]]:
+        return [(note.value, note.tags) for note in self._notes]
 
     @notes.setter
-    def notes(self, notes: List[str]) -> None:
-        self._notes = [NoteField(note) for note in notes]
+    def notes(self, notes: List[Tuple[str, List[str]]]) -> None:
+        self._notes = [NoteField(note, tags) for note, tags in notes]
 
     def add_phone(self, phone_number: str) -> None:
         self._phones.append(PhoneField(phone_number))
@@ -96,14 +96,20 @@ class Customer:
                 return True
         return False
 
-    def add_note(self, note: str) -> None:
-        self._notes.append(NoteField(note))
+    def add_note(self, note: str, tags: List[str] = None) -> None:
+        new_note = NoteField(note)
+        if tags:
+            for tag in tags:
+                new_note.add_tag(tag)
+        self._notes.append(new_note)
 
-    def edit_note(self, index_to_change: int, new_note: str) -> None:
-        for i in range(len(self._notes)):
-            if i == index_to_change:
-                self._notes[i] = NoteField(new_note)
-                return
+    def edit_note(self, index_to_change: int, new_note: str, new_tags: List[str] = None) -> None:
+        if 0 <= index_to_change < len(self._notes):
+            updated_note = NoteField(new_note)
+            if new_tags:
+                for tag in new_tags:
+                    updated_note.add_tag(tag)
+            self._notes[index_to_change] = updated_note
 
     def remove_note(self, index_to_remove: int) -> None:
         del self._notes[index_to_remove - 1]
@@ -113,6 +119,21 @@ class Customer:
             if note_to_search in note.value:
                 return True
         return False
+    
+    def add_tag_to_note(self, index: int, tag: str) -> None:
+        if 0 <= index < len(self._notes):
+            self._notes[index].add_tag(tag)
+
+    def remove_tag_from_note(self, index: int, tag: str) -> None:
+        if 0 <= index < len(self._notes):
+            self._notes[index].remove_tag(tag)
+
+    def search_notes_by_tag(self, tag: str) -> List[Tuple[int, str, List[str]]]:
+        return [(i, note.value, note.tags) for i, note in enumerate(self._notes) if tag in note.tags]
+
+    def sort_notes_by_tags(self) -> List[Tuple[int, str, List[str]]]:
+        return sorted([(i, note.value, note.tags) for i, note in enumerate(self._notes)], 
+                      key=lambda x: len(x[2]), reverse=True)
 
     def dto(self) -> CustomerDTO:
         return CustomerDTO(
@@ -126,5 +147,6 @@ class Customer:
         )
 
     def __str__(self) -> str:
-        return (f"Customer name: {self.name}, phones: {'; '.join(self.phones)}\n"
-                f"{'\n'.join([f"{i+1} - {note};" for i, note in enumerate(self.notes)])}")
+        notes_str = '\n'.join([f"{i+1} - {note.value} (Tags: {', '.join(note.tags)});" 
+                               for i, note in enumerate(self._notes)])
+        return (f"Customer name: {self.name}, phones: {'; '.join(self.phones)}\n{notes_str}")
