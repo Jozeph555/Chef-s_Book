@@ -71,8 +71,8 @@ class Customer:
         self._email = EmailField(email)
 
     @property
-    def notes(self) -> List[Tuple[str, List[str]]]:
-        return [(note.value, note.tags) for note in self._notes]
+    def notes(self) -> List[NoteField]:
+        return self._notes
 
     @notes.setter
     def notes(self, notes: List[Tuple[str, List[str]]]) -> None:
@@ -120,7 +120,7 @@ class Customer:
             if note_to_search in note.value:
                 return True
         return False
-    
+
     def add_tag_to_note(self, index: int, tag: str) -> None:
         if 0 <= index < len(self._notes):
             self._notes[index].add_tag(tag)
@@ -133,7 +133,7 @@ class Customer:
         return [(i, note.value, note.tags) for i, note in enumerate(self._notes) if tag in note.tags]
 
     def sort_notes_by_tags(self) -> List[Tuple[int, str, List[str]]]:
-        return sorted([(i, note.value, note.tags) for i, note in enumerate(self._notes)], 
+        return sorted([(i, note.value, note.tags) for i, note in enumerate(self._notes)],
                       key=lambda x: len(x[2]), reverse=True)
 
     def dto(self) -> CustomerDTO:
@@ -148,6 +148,6 @@ class Customer:
         )
 
     def __str__(self) -> str:
-        notes_str = '\n'.join([f"{i+1} - {note.value} (Tags: {', '.join(note.tags)});" 
+        notes_str = '\n'.join([f"{i + 1} - {note.value} (Tags: {', '.join(note.tags)});"
                                for i, note in enumerate(self._notes)])
         return (f"Customer name: {str(self.name)}, phones: {'; '.join(self.phones)}\n{notes_str}")

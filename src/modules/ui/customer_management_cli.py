@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from src.modules.error_handler import handle_error, InvalidInputError, RecordNotFoundError
 from src.modules.models.customer_model import Customer
 from src.modules.service.customers_service import CustomerService
@@ -89,12 +89,16 @@ class CustomerManagementCLI:
         - exit or close: Exit the program
         """)
 
-    def _get_input(self, prompt: str) -> str:
+    def _get_input(self, prompt: str, can_be_empty: bool = False) -> Optional[str]:
         while True:
             value = input(prompt).strip()
             if value:
                 return value
-            print("Input cannot be empty. Please try again.")
+
+            if can_be_empty:
+                return None
+            else:
+                print("Input cannot be empty. Please try again.")
 
     def find_customer(self, name: str) -> Customer:
         customers = self.customer_service.find_by_name(name)
@@ -162,7 +166,8 @@ class CustomerManagementCLI:
         print(f"Editing customer: {name}")
 
         # Edit name
-        new_name = self._get_input(f"Enter new name (current: {customer.name}, press Enter to keep current): ")
+        new_name = self._get_input(f"Enter new name (current: {customer.name}, press Enter to keep current): ",
+                                   can_be_empty=True)
         if new_name and new_name != customer.name:
             customer.name = new_name
             print(f"Name updated to: {new_name}")
@@ -282,8 +287,8 @@ class CustomerManagementCLI:
         print(f"Address: {customer.address if customer.address else 'None'}")
         print(f"Email: {customer.email if customer.email else 'None'}")
         print("Notes:")
-        for i, [note, tags] in enumerate(customer.notes):
-            print(f"{i}: {note} (Tags: {', '.join(tags)})")
+        for i, note in enumerate(customer.notes):
+            print(f"{i}: {note.value} (Tags: {', '.join(note.tags)})")
 
     @handle_error
     def show_all_customers(self):
@@ -355,6 +360,7 @@ class CustomerManagementCLI:
         name = args[0]
         try:
             note_index = int(args[1])
+
         except ValueError:
             raise InvalidInputError("Note index must be a number.")
         tag = args[2]
