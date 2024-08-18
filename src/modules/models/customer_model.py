@@ -31,7 +31,7 @@ class Customer:
 
     @property
     def name(self) -> str:
-        return self._name.value
+        return self._name
 
     @name.setter
     def name(self, name: str) -> None:
@@ -149,4 +149,4 @@ class Customer:
     def __str__(self) -> str:
         notes_str = '\n'.join([f"{i+1} - {note.value} (Tags: {', '.join(note.tags)});" 
                                for i, note in enumerate(self._notes)])
-        return (f"Customer name: {self.name}, phones: {'; '.join(self.phones)}\n{notes_str}")
+        return (f"Customer name: {str(self.name)}, phones: {'; '.join(self.phones)}\n{notes_str}")

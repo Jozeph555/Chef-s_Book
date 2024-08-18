@@ -40,7 +40,7 @@ class CustomerService(BaseService[CustomerDTO, Customer]):
         return upcoming_birthdays
 
     def find_by_name(self, name: str) -> List[Customer]:
-        return [customer for customer in self if customer.name.value == name]
+        return [customer for customer in self if str(customer.name) == name]
 
     def find_by_phone(self, phone: str) -> List[Customer]:
         return [customer for customer in self if customer.has_phone(phone)]

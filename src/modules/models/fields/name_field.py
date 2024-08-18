@@ -15,3 +15,10 @@ class NameField(Field):
 
     def __str__(self):
         return self.value
+
+    def __eq__(self, other):
+        if isinstance(other, str):
+            return self.value == other
+        elif isinstance(other, NameField):
+            return self.value == other.value
+        return False

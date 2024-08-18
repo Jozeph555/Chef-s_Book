@@ -88,6 +88,12 @@ class MainLoop:
                 return value
             print("Input cannot be empty. Please try again.")
 
+    def find_customer(self, name: str) -> Customer:
+        customers = self.customer_service.find_by_name(name)
+        if not customers:
+            raise RecordNotFoundError(f"Customer {name} not found.")
+        return customers[0]
+
     @handle_error
     def add_customer(self, args: List[str]):
         customer = Customer()
@@ -284,9 +290,9 @@ class MainLoop:
         query = " ".join(args).lower()
         results = []
         for customer in self.customer_service.data:
-            if (query in customer.name.lower() or 
-                any(query in phone for phone in customer.phones) or 
-                (customer.email and query in customer.email.lower())):
+            if (query in str(customer.name).lower() or
+                any(query in phone.lower() for phone in customer.phones) or
+                (customer.email and query in str(customer.email).lower())):
                 results.append(customer)
         
         if not results:
@@ -363,4 +369,30 @@ class MainLoop:
         if 0 <= note_index < len(customer.notes):
             if tag in customer.notes[note_index].tags:
                 customer.notes[note_index].remove_tag(tag)
-                self.customer
+                self.customer_service.save()
+                print(f"Tag '{tag}' removed from note {note_index} for customer {name}.")
+            else:
+                print(f"Tag '{tag}' not found in note {note_index} for customer {name}.")
+        else:
+            raise InvalidInputError(f"Invalid note index for customer {name}.")
+
+    def find_tag(self, args: List[str]):
+        if len(args) < 1:
+            raise InvalidInputError("Please provide a tag to search for.")
+        tag = args[0]
+        results = self.customer_service.find_by_tag(tag)
+        if results:
+            print(f"Customers with tag '{tag}':")
+            for customer in results:
+                print(customer.name)
+        else:
+            print(f"No customers found with tag '{tag}'.")
+
+    def sort_tag(self):
+        sorted_customers = self.customer_service.sort_by_tags()
+        if sorted_customers:
+            print("Customers sorted by tags:")
+            for customer in sorted_customers:
+                print(f"{customer.name}: {', '.join(tag for note in customer.notes for tag in note.tags)}")
+        else:
+            print("No customers with tags found.")
