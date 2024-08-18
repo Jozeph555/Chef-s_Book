@@ -12,3 +12,6 @@ class NameField(Field):
         if not NameField.MIN_LENGTH <= len(value) <= NameField.MAX_LENGTH:
             raise ValueError(f"The name '{value}' was not added. "
                              f"The name must be between {NameField.MIN_LENGTH} and {NameField.MAX_LENGTH} characters long.")
+
+    def __str__(self):
+        return self.value

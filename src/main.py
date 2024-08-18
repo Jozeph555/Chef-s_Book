@@ -1,7 +1,8 @@
-from modules.models.booking_model import Booking
-from modules.models.customer_model import Customer
-from modules.service.bookings_service import BookingsService
-from modules.service.customers_service import CustomerService
+from src.modules.ui.main_loop import MainLoop
+from src.modules.models.booking_model import Booking
+from src.modules.models.customer_model import Customer
+from src.modules.service.bookings_service import BookingsService
+from src.modules.service.customers_service import CustomerService
 
 
 def main():
@@ -25,6 +26,9 @@ def main():
 
     customer_service.save()
     booking_service.save()
+
+    main_loop = MainLoop()
+    main_loop.run()
 
 
 if __name__ == "__main__":
