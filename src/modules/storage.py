@@ -1,6 +1,7 @@
 """"Module for storing contacts and notes in a file"""
 
 
+import os
 import csv
 from typing import List, Type, TypeVar, Generic
 
@@ -26,21 +27,22 @@ class Storage(Generic[D]):
     def load(self) -> List[D]:
         """Load a list of DTOs from a CSV file."""
         dtos = []
+        if not os.path.exists(self.filename):
+            return dtos
         try:
             with open(self.filename, mode='r', newline='') as file:
                 reader = csv.DictReader(file, fieldnames=self._get_fieldnames())
-                next(reader, None)
+                next(reader, None)  # Skip the header
                 for row in reader:
                     dto = self.dto_cls()
                     dtos.append(dto.from_dict(row))
-        except FileNotFoundError:
-            return dtos
+        except IOError as e:
+            print(f"Error reading file {self.filename}: {str(e)}")
         return dtos
 
     def clear(self) -> None:
         """Delete the file."""
         try:
-            import os
             os.remove(self.filename)
         except FileNotFoundError:
             pass

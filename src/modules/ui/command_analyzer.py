@@ -1,36 +1,26 @@
 """Analizing command module"""
 
-
 import difflib
 from typing import List, Tuple
-
 
 COMMANDS = [
     "hello",
     "exit",
     "close",
+    "help",
     "add",
+    "edit",
+    "delete",
+    "show",
+    "show-all",
+    "find",
     "add-phone",
-    "edit-phone",
-    "remove-phone",
-    "has-phone",
     "add-note",
-    "edit-note",
-    "remove-note",
-    "has-note",
     "add-tag",
     "remove-tag",
     "find-tag",
     "sort-tag",
-    "show-all",
-    "add-birthday",
-    "show-birthday",
-    "upcoming-birthday",
-    "add-email",
-    "show-email",
-    "add-address",
-    "show-address",
-    "show-notes"
+    "upcoming-birthday"
 ]
 
 def analyze_input(user_input: str) -> Tuple[str, List[str]]:
