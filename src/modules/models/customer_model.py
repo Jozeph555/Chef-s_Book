@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Tuple, Optional
 
 from src.modules.dto.customer_dto import CustomerDTO
 from src.modules.models.fields.address_field import AddressField
