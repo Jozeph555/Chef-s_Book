@@ -3,10 +3,10 @@ from src.modules.error_handler import handle_error, InvalidInputError, RecordNot
 from src.modules.models.customer_model import Customer
 from src.modules.service.customers_service import CustomerService
 from src.modules.service.bookings_service import BookingsService
-from src.modules.ui.command_analyzer import analyze_input
+from src.modules.ui.commands import get_closest_command, Command
 
 
-class MainLoop:
+class CustomerManagementCLI:
     def __init__(self):
         self.customer_service = CustomerService()
         self.bookings_service = BookingsService()
@@ -14,6 +14,7 @@ class MainLoop:
     @handle_error
     def run(self):
         print("Welcome to Chef's Book!")
+
         try:
             while True:
                 user_input = input("Enter a command: ").strip()
@@ -21,42 +22,42 @@ class MainLoop:
                     print("Empty input. Please enter a command.")
                     continue
 
-                command, args = analyze_input(user_input)
+                command, args = get_closest_command(user_input)
 
-                if command in ["exit", "close"]:
+                if command in [Command.EXIT, Command.CLOSE]:
                     return self.shutdown()
-                elif command == "hello":
+                elif command == Command.HELLO:
                     self.greet()
-                elif command == "help":
+                elif command == Command.HELP:
                     self.help()
-                elif command == "add":
+                elif command == Command.ADD:
                     self.add_customer(args)
-                elif command == "edit":
+                elif command == Command.EDIT:
                     self.edit_customer(args)
-                elif command == "delete":
+                elif command == Command.DELETE:
                     self.delete_customer(args)
-                elif command == "show":
+                elif command == Command.SHOW:
                     self.show_customer(args)
-                elif command == "show-all":
+                elif command == Command.SHOW_ALL:
                     self.show_all_customers()
-                elif command == "find":
+                elif command == Command.FIND:
                     self.find_customers(args)
-                elif command == "upcoming-birthday":
+                elif command == Command.UPCOMING_BIRTHDAY:
                     self.upcoming_birthday(args)
-                elif command == "add-phone":
+                elif command == Command.ADD_PHONE:
                     self.add_phone(args)
-                elif command == "add-note":
+                elif command == Command.ADD_NOTE:
                     self.add_note(args)
-                elif command == "add-tag":
+                elif command == Command.ADD_TAG:
                     self.add_tag(args)
-                elif command == "remove-tag":
+                elif command == Command.REMOVE_TAG:
                     self.remove_tag(args)
-                elif command == "find-tag":
+                elif command == Command.FIND_TAG:
                     self.find_tag(args)
-                elif command == "sort-tag":
+                elif command == Command.SORT_TAG:
                     self.sort_tag()
                 else:
-                    print(f"Unknown command: {command}")
+                    print(f"Unknown command")
         except KeyboardInterrupt:
             self.shutdown()
 
@@ -281,8 +282,8 @@ class MainLoop:
         print(f"Address: {customer.address if customer.address else 'None'}")
         print(f"Email: {customer.email if customer.email else 'None'}")
         print("Notes:")
-        for i, note in enumerate(customer.notes):
-            print(f"{i}: {note.value} (Tags: {', '.join(note.tags)})")
+        for i, [note, tags] in enumerate(customer.notes):
+            print(f"{i}: {note} (Tags: {', '.join(tags)})")
 
     @handle_error
     def show_all_customers(self):

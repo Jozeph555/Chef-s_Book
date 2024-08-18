@@ -1,5 +1,5 @@
-from src.modules.ui.main_loop import MainLoop
+from src.modules.ui.customer_management_cli import CustomerManagementCLI
 
 if __name__ == "__main__":
-    bot = MainLoop()
+    bot = CustomerManagementCLI()
     bot.run()
