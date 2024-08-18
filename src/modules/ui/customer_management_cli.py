@@ -56,6 +56,8 @@ class CustomerManagementCLI:
                     self.find_tag(args)
                 elif command == Command.SORT_TAG:
                     self.sort_tag()
+                elif command == Command.RESET:
+                    self.reset()
                 else:
                     print(f"Unknown command")
         except KeyboardInterrupt:
@@ -63,6 +65,13 @@ class CustomerManagementCLI:
 
     def greet(self):
         print("Hello! How can I assist you today?")
+
+    def reset(self):
+        if input("Are you sure you want to reset all data? (y/n): ").lower() != 'y':
+            return
+        self.customer_service.clear()
+        self.bookings_service.clear()
+        print("All data has been reset.")
 
     def shutdown(self):
         self.customer_service.save()
@@ -87,6 +96,7 @@ class CustomerManagementCLI:
         - find-tag [tag]: Find all customers with notes containing the specified tag
         - sort-tag: Show all customers sorted by their tags
         - exit or close: Exit the program
+        - reset: Reset all saved data
         """)
 
     def _get_input(self, prompt: str, can_be_empty: bool = False) -> Optional[str]:

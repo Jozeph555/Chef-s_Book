@@ -23,6 +23,7 @@ class Command(Enum):
     FIND_TAG = "find-tag"
     SORT_TAG = "sort-tag"
     UPCOMING_BIRTHDAY = "upcoming-birthday"
+    RESET = "reset"
 
 
 def get_closest_command(user_input: str) -> Tuple[Optional[Command], List[str]]:
