@@ -22,7 +22,7 @@ class CustomerService(BaseService[CustomerDTO, Customer]):
             if record.birthday is None:
                 continue
 
-            birthday = record.birthday.value.date()
+            birthday = record.birthday
             upcoming_birthday = birthday.replace(year=today.year)
 
             # birthday has passed this year
@@ -32,15 +32,13 @@ class CustomerService(BaseService[CustomerDTO, Customer]):
             days_delta = (upcoming_birthday - today).days
 
             # birthday is not in the next x days
-            if 0 > days_delta or days_delta > date_range:
-                continue
-
-            upcoming_birthdays.append(record)
+            if 0 <= days_delta <= date_range:
+                upcoming_birthdays.append(record)
 
         return upcoming_birthdays
 
     def find_by_name(self, name: str) -> List[Customer]:
-        return [customer for customer in self if str(customer.name) == name]
+        return [customer for customer in self if customer.name.value.lower() == name.lower()]
 
     def find_by_phone(self, phone: str) -> List[Customer]:
         return [customer for customer in self if customer.has_phone(phone)]

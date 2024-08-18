@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Tuple, Optional
 
 from src.modules.dto.customer_dto import CustomerDTO
@@ -46,8 +47,8 @@ class Customer:
         self._phones = [PhoneField(phone) for phone in phones]
 
     @property
-    def birthday(self) -> Optional[str]:
-        return str(self._birthday) if self._birthday.value else None
+    def birthday(self) -> Optional[datetime.date]:
+        return self._birthday.value if self._birthday else None
 
     @birthday.setter
     def birthday(self, birthday: str) -> None:

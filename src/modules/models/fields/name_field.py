@@ -14,7 +14,7 @@ class NameField(Field):
                              f"The name must be between {NameField.MIN_LENGTH} and {NameField.MAX_LENGTH} characters long.")
 
     def __str__(self):
-        return self.value
+        return str(self.value)
 
     def __eq__(self, other):
         if isinstance(other, str):
