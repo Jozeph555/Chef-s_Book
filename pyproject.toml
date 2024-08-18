@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "chefs-book"
+version = "0.1.0"
+description = "A personal assistant for restaurants"
+authors = ["Recipe Coders"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pydantic = "^2.8.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+chefs-book = "src.main:main"

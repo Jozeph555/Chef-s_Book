@@ -54,4 +54,8 @@ class CustomerService(BaseService[CustomerDTO, Customer]):
     def find_by_note(self, note: str) -> List[Customer]:
         return [customer for customer in self if customer.has_note(note)]
 
+    def find_by_tag(self, tag: str) -> List[Customer]:
+        return [customer for customer in self if any(tag in note.tags for note in customer.notes)]
 
+    def sort_by_tags(self) -> List[Customer]:
+        return sorted(self, key=lambda customer: sorted([tag for note in customer.notes for tag in note.tags]))
