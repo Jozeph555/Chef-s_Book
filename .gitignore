@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 .idea/*
+.bookings.csv
+.customers.csv
+
 
 # Distribution / packaging
 .Python
