@@ -1,10 +1,10 @@
 from typing import List
 from src.modules.error_handler import handle_error, InvalidInputError, RecordNotFoundError
 from src.modules.models.customer_model import Customer
-from src.modules.dto.customer_dto import CustomerDTO
 from src.modules.service.customers_service import CustomerService
 from src.modules.service.bookings_service import BookingsService
 from src.modules.ui.command_analyzer import analyze_input
+
 
 class MainLoop:
     def __init__(self):
@@ -14,54 +14,61 @@ class MainLoop:
     @handle_error
     def run(self):
         print("Welcome to Chef's Book!")
-        while True:
-            user_input = input("Enter a command: ").strip()
-            if not user_input:
-                print("Empty input. Please enter a command.")
-                continue
-            
-            command, args = analyze_input(user_input)
+        try:
+            while True:
+                user_input = input("Enter a command: ").strip()
+                if not user_input:
+                    print("Empty input. Please enter a command.")
+                    continue
 
-            if command in ["exit", "close"]:
-                print("Goodbye!")
-                break
-            elif command == "hello":
-                self.hello()
-            elif command == "help":
-                self.show_help()
-            elif command == "add":
-                self.add_customer(args)
-            elif command == "edit":
-                self.edit_customer(args)
-            elif command == "delete":
-                self.delete_customer(args)
-            elif command == "show":
-                self.show_customer(args)
-            elif command == "show-all":
-                self.show_all_customers()
-            elif command == "find":
-                self.find_customers(args)
-            elif command == "upcoming-birthday":
-                self.upcoming_birthday(args)
-            elif command == "add-phone":
-                self.add_phone(args)
-            elif command == "add-note":
-                self.add_note(args)
-            elif command == "add-tag":
-                self.add_tag(args)
-            elif command == "remove-tag":
-                self.remove_tag(args)
-            elif command == "find-tag":
-                self.find_tag(args)
-            elif command == "sort-tag":
-                self.sort_tag()
-            else:
-                print(f"Unknown command: {command}")
+                command, args = analyze_input(user_input)
 
-    def hello(self):
+                if command in ["exit", "close"]:
+                    return self.shutdown()
+                elif command == "hello":
+                    self.greet()
+                elif command == "help":
+                    self.help()
+                elif command == "add":
+                    self.add_customer(args)
+                elif command == "edit":
+                    self.edit_customer(args)
+                elif command == "delete":
+                    self.delete_customer(args)
+                elif command == "show":
+                    self.show_customer(args)
+                elif command == "show-all":
+                    self.show_all_customers()
+                elif command == "find":
+                    self.find_customers(args)
+                elif command == "upcoming-birthday":
+                    self.upcoming_birthday(args)
+                elif command == "add-phone":
+                    self.add_phone(args)
+                elif command == "add-note":
+                    self.add_note(args)
+                elif command == "add-tag":
+                    self.add_tag(args)
+                elif command == "remove-tag":
+                    self.remove_tag(args)
+                elif command == "find-tag":
+                    self.find_tag(args)
+                elif command == "sort-tag":
+                    self.sort_tag()
+                else:
+                    print(f"Unknown command: {command}")
+        except KeyboardInterrupt:
+            self.shutdown()
+
+    def greet(self):
         print("Hello! How can I assist you today?")
 
-    def show_help(self):
+    def shutdown(self):
+        self.customer_service.save()
+        self.bookings_service.save()
+        print("Goodbye!")
+
+    def help(self):
         print("""
         Available commands:
         - hello: Greet the assistant
@@ -97,7 +104,7 @@ class MainLoop:
     @handle_error
     def add_customer(self, args: List[str]):
         customer = Customer()
-        
+
         # Name
         name = self._get_input("Enter customer name: ")
         if not name:
@@ -150,21 +157,22 @@ class MainLoop:
             raise InvalidInputError("Please provide the name of the customer to edit.")
         name = " ".join(args)
         customer = self.find_customer(name)
-        
+
         print(f"Editing customer: {name}")
-        
+
         # Edit name
         new_name = self._get_input(f"Enter new name (current: {customer.name}, press Enter to keep current): ")
         if new_name and new_name != customer.name:
             customer.name = new_name
             print(f"Name updated to: {new_name}")
-        
+
         # Edit phones
         print("Current phone numbers:")
         for i, phone in enumerate(customer.phones):
             print(f"{i}: {phone}")
         while True:
-            action = self._get_input("Enter 'a' to add, 'e' to edit, 'd' to delete a phone, or 'n' to finish editing phones: ")
+            action = self._get_input(
+                "Enter 'a' to add, 'e' to edit, 'd' to delete a phone, or 'n' to finish editing phones: ")
             if action.lower() == 'a':
                 new_phone = self._get_input("Enter new phone number: ")
                 customer.add_phone(new_phone)
@@ -186,17 +194,18 @@ class MainLoop:
                     print("Invalid index.")
             elif action.lower() == 'n':
                 break
-        
+
         # Edit birthday
         current_birthday = customer.birthday if customer.birthday else "None"
-        new_birthday = self._get_input(f"Enter new birthday (current: {current_birthday}, 'n' to skip, 'd' to delete): ")
+        new_birthday = self._get_input(
+            f"Enter new birthday (current: {current_birthday}, 'n' to skip, 'd' to delete): ")
         if new_birthday.lower() == 'd':
             customer.birthday = None
             print("Birthday deleted.")
         elif new_birthday.lower() != 'n':
             customer.birthday = new_birthday
             print(f"Birthday updated to: {new_birthday}")
-        
+
         # Edit address
         current_address = customer.address if customer.address else "None"
         new_address = self._get_input(f"Enter new address (current: {current_address}, 'n' to skip, 'd' to delete): ")
@@ -206,7 +215,7 @@ class MainLoop:
         elif new_address.lower() != 'n':
             customer.address = new_address
             print(f"Address updated to: {new_address}")
-        
+
         # Edit email
         current_email = customer.email if customer.email else "None"
         new_email = self._get_input(f"Enter new email (current: {current_email}, 'n' to skip, 'd' to delete): ")
@@ -216,13 +225,14 @@ class MainLoop:
         elif new_email.lower() != 'n':
             customer.email = new_email
             print(f"Email updated to: {new_email}")
-        
+
         # Edit notes
         print("Current notes:")
         for i, note in enumerate(customer.notes):
             print(f"{i}: {note}")
         while True:
-            action = self._get_input("Enter 'a' to add, 'e' to edit, 'd' to delete a note, or 'n' to finish editing notes: ")
+            action = self._get_input(
+                "Enter 'a' to add, 'e' to edit, 'd' to delete a note, or 'n' to finish editing notes: ")
             if action.lower() == 'a':
                 new_note = self._get_input("Enter new note: ")
                 customer.add_note(new_note)
@@ -244,7 +254,7 @@ class MainLoop:
                     print("Invalid index.")
             elif action.lower() == 'n':
                 break
-        
+
         self.customer_service.save()
         print(f"Customer {customer.name} updated successfully.")
 
@@ -291,10 +301,10 @@ class MainLoop:
         results = []
         for customer in self.customer_service.data:
             if (query in str(customer.name).lower() or
-                any(query in phone.lower() for phone in customer.phones) or
-                (customer.email and query in str(customer.email).lower())):
+                    any(query in phone.lower() for phone in customer.phones) or
+                    (customer.email and query in str(customer.email).lower())):
                 results.append(customer)
-        
+
         if not results:
             print("No matching customers found.")
         else:
